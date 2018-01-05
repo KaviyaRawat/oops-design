@@ -1,12 +1,13 @@
 
+import entities.ParkingLot;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class AutomatedSystem {
-
+public class DriverCls {
 
     public static void main(String[] args) {
         // If input file is provided as command line argument.
@@ -32,6 +33,7 @@ public class AutomatedSystem {
             }
         }
     }
+
 
 
 }
