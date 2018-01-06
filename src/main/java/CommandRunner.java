@@ -38,16 +38,24 @@ public class CommandRunner {
         HashMap<Integer, Vehicle> map =
                 AutomatedSystem.getParkingLot().getOccupiedParkingSpots();
 
-        System.out.format("%4s%32s%32s", "id" , "Registration Id", "Colour"+ "\n");
+        // Better Formatter : Example shows tab delimited so the below one used.
+        /*System.out.format("%4s%32s%32s", "id" , "Registration Id", "Colour"+ "\n");
 
         for(Map.Entry<Integer, Vehicle> entry: map.entrySet()){
             System.out.format("%4s%32s%32s",
                     entry.getKey(),
                     entry.getValue().getRegistrationId(),
                     entry.getValue().getColor() + "\n");
+        }*/
+
+        System.out.format("id\tRegistration Id\tColour\t"+ "\n");
+
+        for(Map.Entry<Integer, Vehicle> entry: map.entrySet()){
+            System.out.format(
+                    entry.getKey() + "\t" +
+                    entry.getValue().getRegistrationId() + "\t" +
+                    entry.getValue().getColor() + "\t" + "\n");
         }
-
-
 
     }
 
@@ -65,7 +73,7 @@ public class CommandRunner {
 
     private static void createParkingLot(String num) {
         AutomatedSystem.setParkingLot(new ParkingLot(Integer.valueOf(num)));
-        System.out.print("Jai Sai Ram ");
+        System.out.print("Created a parking lot with " + num + " slots");
     }
 
     private static void runLeaveCommand(String num){
@@ -80,7 +88,7 @@ public class CommandRunner {
             System.out.println("Sorry, parking lot is full");
         }
         else{
-            System.out.println("Allocated spot number : " + spotNo);
+            System.out.println("Allocated slot number: " + spotNo);
         }
     }
 }

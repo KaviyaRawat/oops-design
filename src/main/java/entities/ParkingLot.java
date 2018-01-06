@@ -1,6 +1,8 @@
 package entities;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.PriorityQueue;
 
 public class ParkingLot {
@@ -8,6 +10,8 @@ public class ParkingLot {
     private HashMap<Integer, Vehicle> occupiedParkingSpots = new HashMap();
     private int parkingSpotsCount;
     private PriorityQueue<Integer> nearestSpaceQueue = new PriorityQueue<Integer>();
+    private HashMap<String, List<Integer>> colourToSpotMap = new HashMap();
+    private HashMap<String, Integer> regNoToSpotMap = new HashMap();
 
     public HashMap<Integer, Vehicle> getOccupiedParkingSpots() {
         return occupiedParkingSpots;
@@ -30,6 +34,9 @@ public class ParkingLot {
 
     public void vacate(Integer spotNo){
         nearestSpaceQueue.add(spotNo);
+        Vehicle car = occupiedParkingSpots.get(spotNo);
+        colourToSpotMap.get(car.getColor()).remove(spotNo);
+        regNoToSpotMap.remove(car.getRegistrationId());
         occupiedParkingSpots.remove(spotNo);
     }
 
@@ -39,6 +46,14 @@ public class ParkingLot {
         }
         int spotNo = nearestSpaceQueue.poll();
         occupiedParkingSpots.put(spotNo, vehicle);
+
+        if(colourToSpotMap.get(vehicle.getColor())==null){
+            colourToSpotMap.put(vehicle.getColor(), new ArrayList<Integer>());
+        }
+        colourToSpotMap.get(vehicle.getColor()).add(spotNo);
+
+        regNoToSpotMap.put(vehicle.getRegistrationId(), spotNo);
+
         return spotNo;
     }
 
