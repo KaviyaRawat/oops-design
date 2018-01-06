@@ -19,6 +19,7 @@ public class CommandRunnerTest {
 
     @Before
     public void preSetup() {
+        System.out.println("Running tests for all the commands; the output is bypassed for assertion");
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new FileReader(
@@ -55,7 +56,7 @@ public class CommandRunnerTest {
 
         // Parking Lot Creation test
         CommandRunner.runCommand(commands.get(0));
-        Assert.assertEquals(outputs.get(0), outContent.toString());
+        Assert.assertEquals(outputs.get(0)+"\n", outContent.toString());
         Assert.assertEquals(6, AutomatedSystem.getParkingLot().getParkingSpotsCount());
         //Assert.assertEquals("Jai Sai Ram ", outContent.toString());
 

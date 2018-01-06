@@ -17,6 +17,7 @@ public class DriverCls {
                 String line = reader.readLine();
                 while(line!=null){
                     CommandRunner.runCommand(line);
+                    line = reader.readLine();
                 }
             } catch (FileNotFoundException e) {
                 System.out.println("File not found. Please Check." + e);

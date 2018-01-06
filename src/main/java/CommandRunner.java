@@ -13,20 +13,37 @@ public class CommandRunner {
 
     public static void runCommand(String line) {
         String[] partsOfCommand = line.split(" ");
-        if (line.contains(CREATE_PARKING_LOT_COMMAND)) {
-            createParkingLot(partsOfCommand[1]);
-        } else if (line.startsWith(PARK_COMMAND)) {
-            runParkCommand(partsOfCommand[1], partsOfCommand[2]);
-        } else if (line.startsWith(LEAVE_COMMAND)) {
-            runLeaveCommand(partsOfCommand[1]);
-        } else if (line.startsWith(REGISTRATION_NUMBERS_FOR_CARS_WITH_COLOUR_COMMAND)) {
-            findRegNumForCarWithColour(partsOfCommand[1]);
-        } else if (line.startsWith(SLOT_NUMBERS_FOR_CARS_WITH_COLOUR_COMMAND)) {
-            findSlotNumberForCarWithColor(partsOfCommand[1]);
-        } else if (line.startsWith(SLOT_NUMBER_FOR_REGISTRATION_NUMBER_COMMAND)) {
-            findSlotNumberForRegNum(partsOfCommand[1]);
-        } else if (line.startsWith(STATUS)) {
-            status();
+        if(partsOfCommand.length==0)
+            return;
+        if(partsOfCommand.length>=2) {
+            if (line.contains(CREATE_PARKING_LOT_COMMAND)) {
+                createParkingLot(partsOfCommand[1]);
+            } else if (AutomatedSystem.getParkingLot() != null && AutomatedSystem.getParkingLot().getParkingSpotsCount() > 0) {
+                if (line.startsWith(PARK_COMMAND)) {
+                    if (partsOfCommand.length == 3)
+                        runParkCommand(partsOfCommand[1], partsOfCommand[2]);
+                    else
+                        System.out.println("Incomplete Command");
+                } else if (line.startsWith(LEAVE_COMMAND)) {
+                    runLeaveCommand(partsOfCommand[1]);
+                } else if (line.startsWith(REGISTRATION_NUMBERS_FOR_CARS_WITH_COLOUR_COMMAND)) {
+                    findRegNumForCarWithColour(partsOfCommand[1]);
+                } else if (line.startsWith(SLOT_NUMBERS_FOR_CARS_WITH_COLOUR_COMMAND)) {
+                    findSlotNumberForCarWithColor(partsOfCommand[1]);
+                } else if (line.startsWith(SLOT_NUMBER_FOR_REGISTRATION_NUMBER_COMMAND)) {
+                    findSlotNumberForRegNum(partsOfCommand[1]);
+                }
+            } else {
+                System.out.println("Parking Lot not yet created");
+            }
+        }
+        else{
+            if (line.startsWith(STATUS)) {
+                status();
+            }
+            else {
+                System.out.println("Incomplete Command");
+            }
         }
     }
 
@@ -106,7 +123,7 @@ public class CommandRunner {
 
     private static void createParkingLot(String num) {
         AutomatedSystem.setParkingLot(new ParkingLot(Integer.valueOf(num)));
-        System.out.print("Created a parking lot with " + num + " slots");
+        System.out.println("Created a parking lot with " + num + " slots");
     }
 
     private static void runLeaveCommand(String num) {
