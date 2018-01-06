@@ -40,6 +40,16 @@ public class ParkingLot {
         occupiedParkingSpots.remove(spotNo);
     }
 
+    public HashMap<String, List<Integer>> getColourToSpotMap() {
+        return colourToSpotMap;
+    }
+
+
+    public HashMap<String, Integer> getRegNoToSpotMap() {
+        return regNoToSpotMap;
+    }
+
+
     public int park(Vehicle vehicle){
         if(occupiedParkingSpots.size() == parkingSpotsCount){
             return -1;
@@ -53,6 +63,7 @@ public class ParkingLot {
         colourToSpotMap.get(vehicle.getColor()).add(spotNo);
 
         regNoToSpotMap.put(vehicle.getRegistrationId(), spotNo);
+
 
         return spotNo;
     }

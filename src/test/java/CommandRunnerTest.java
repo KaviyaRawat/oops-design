@@ -23,44 +23,32 @@ public class CommandRunnerTest {
         try {
             reader = new BufferedReader(new FileReader(
                     getClass().getClassLoader()
-                    .getResource("inputFile.txt").getFile()));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
+                            .getResource("inputFile.txt").getFile()));
+
             String line = reader.readLine();
-            while(line!=null) {
+            while (line != null) {
                 commands.add(line);
                 line = reader.readLine();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
             reader = new BufferedReader(new FileReader(
                     getClass().getClassLoader()
                             .getResource("output.txt").getFile()));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            String line = reader.readLine();
-            while(line!=null) {
+
+            line = reader.readLine();
+            while (line != null) {
                 outputs.add(line);
                 line = reader.readLine();
             }
-        } catch (IOException e) {
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
         System.setOut(new PrintStream(outContent));
         System.setErr(new PrintStream(errContent));
     }
-
-    /*@BeforeClass
-    public static void runBeforeClass(){
-        CommandRunner.runCommand(commands.get(0));
-        outContent.reset();
-    }*/
 
     @Test
     public void creationTest(){
@@ -72,11 +60,20 @@ public class CommandRunnerTest {
         //Assert.assertEquals("Jai Sai Ram ", outContent.toString());
 
 
-        for(int i=1; i<=12; i++){
+        for(int i=1; i<=15; i++){
             outContent.reset();
             CommandRunner.runCommand(commands.get(i));
             Assert.assertEquals(outputs.get(i)+"\n", outContent.toString());
         }
+
+        outContent.reset();
+        CommandRunner.runCommand(commands.get(16));
+        String output_status = "Slot No.\tRegistration No\tColour\n";
+
+        for(int i=17; i < outputs.size(); i++){
+            output_status = output_status + (outputs.get(i).replaceAll("[ ]", "\t")+"\n");
+        }
+        Assert.assertEquals(output_status, outContent.toString());
 
     }
 

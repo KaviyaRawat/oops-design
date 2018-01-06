@@ -2,7 +2,9 @@ import entities.AutomatedSystem;
 import entities.ParkingLot;
 import entities.Vehicle;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static utils.Constants.*;
@@ -11,30 +13,24 @@ public class CommandRunner {
 
     public static void runCommand(String line) {
         String[] partsOfCommand = line.split(" ");
-        if(line.contains(CREATE_PARKING_LOT_COMMAND)){
+        if (line.contains(CREATE_PARKING_LOT_COMMAND)) {
             createParkingLot(partsOfCommand[1]);
-        }
-        else if(line.startsWith(PARK_COMMAND)){
+        } else if (line.startsWith(PARK_COMMAND)) {
             runParkCommand(partsOfCommand[1], partsOfCommand[2]);
-        }
-        else if(line.startsWith(LEAVE_COMMAND)){
+        } else if (line.startsWith(LEAVE_COMMAND)) {
             runLeaveCommand(partsOfCommand[1]);
-        }
-        else if(line.startsWith(REGISTRATION_NUMBERS_FOR_CARS_WITH_COLOUR_COMMAND)){
+        } else if (line.startsWith(REGISTRATION_NUMBERS_FOR_CARS_WITH_COLOUR_COMMAND)) {
             findRegNumForCarWithColour(partsOfCommand[1]);
-        }
-        else if(line.startsWith(SLOT_NUMBERS_FOR_CARS_WITH_COLOUR_COMMAND)){
+        } else if (line.startsWith(SLOT_NUMBERS_FOR_CARS_WITH_COLOUR_COMMAND)) {
             findSlotNumberForCarWithColor(partsOfCommand[1]);
-        }
-        else if(line.startsWith(SLOT_NUMBER_FOR_REGISTRATION_NUMBER_COMMAND)){
+        } else if (line.startsWith(SLOT_NUMBER_FOR_REGISTRATION_NUMBER_COMMAND)) {
             findSlotNumberForRegNum(partsOfCommand[1]);
-        }
-        else  if(line.startsWith(STATUS)){
+        } else if (line.startsWith(STATUS)) {
             status();
         }
     }
 
-    private static void status(){
+    private static void status() {
         HashMap<Integer, Vehicle> map =
                 AutomatedSystem.getParkingLot().getOccupiedParkingSpots();
 
@@ -48,26 +44,63 @@ public class CommandRunner {
                     entry.getValue().getColor() + "\n");
         }*/
 
-        System.out.format("id\tRegistration Id\tColour\t"+ "\n");
+        System.out.format("Slot No.\tRegistration No\tColour" + "\n");
 
-        for(Map.Entry<Integer, Vehicle> entry: map.entrySet()){
-            System.out.format(
+        for (Map.Entry<Integer, Vehicle> entry : map.entrySet()) {
+            System.out.println(
                     entry.getKey() + "\t" +
-                    entry.getValue().getRegistrationId() + "\t" +
-                    entry.getValue().getColor() + "\t" + "\n");
+                            entry.getValue().getRegistrationId() + "\t" +
+                            entry.getValue().getColor());
         }
 
     }
 
-    private static void findSlotNumberForRegNum(String regNum){
-
+    private static void findSlotNumberForRegNum(String regNum) {
+        Integer num =
+                AutomatedSystem
+                .getParkingLot()
+                .getRegNoToSpotMap()
+                .get(regNum);
+        if(num == null){
+            System.out.println("Not found");
+        }
+        else {
+            System.out.println(
+                    AutomatedSystem
+                            .getParkingLot()
+                            .getRegNoToSpotMap()
+                            .get(regNum));
+        }
     }
 
-    private static void findSlotNumberForCarWithColor(String colour){
-
+    private static void findSlotNumberForCarWithColor(String colour) {
+        List<Integer> spotNos = AutomatedSystem
+                .getParkingLot().getColourToSpotMap().get(colour);
+        if(spotNos.size()==0){
+            System.out.println("Not found");
+        }
+        else {
+            System.out.println(spotNos.toString().replaceAll("[\\[\\]]",""));
+        }
     }
 
-    private static void findRegNumForCarWithColour(String colour){
+    private static void findRegNumForCarWithColour(String colour) {
+
+        List<Integer> spotNos = AutomatedSystem
+                .getParkingLot().getColourToSpotMap().get(colour);
+        if(spotNos.size()==0){
+            System.out.println("Not found");
+        }
+        else {
+            List<String> regNums = new ArrayList<>();
+            spotNos.forEach(spotNo -> {
+                regNums.add(AutomatedSystem
+                        .getParkingLot().getOccupiedParkingSpots()
+                        .get(spotNo).getRegistrationId());
+            });
+            System.out.println(
+                    String.join(", ", regNums));
+        }
 
     }
 
@@ -76,18 +109,17 @@ public class CommandRunner {
         System.out.print("Created a parking lot with " + num + " slots");
     }
 
-    private static void runLeaveCommand(String num){
+    private static void runLeaveCommand(String num) {
         AutomatedSystem.getParkingLot().vacate(Integer.valueOf(num));
         System.out.println("Slot number " + num + " is free");
     }
 
-    private static void runParkCommand(String regNum, String colour){
+    private static void runParkCommand(String regNum, String colour) {
         Vehicle vehicle = new Vehicle(regNum, colour);
         int spotNo = AutomatedSystem.getParkingLot().park(vehicle);
-        if(spotNo == -1){
+        if (spotNo == -1) {
             System.out.println("Sorry, parking lot is full");
-        }
-        else{
+        } else {
             System.out.println("Allocated slot number: " + spotNo);
         }
     }
