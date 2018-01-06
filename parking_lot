@@ -1,0 +1,3 @@
+
+mvn clean install
+java -jar parking-lot.jar $1
