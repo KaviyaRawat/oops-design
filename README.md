@@ -10,3 +10,7 @@ Some assumptions are listed below because of some ambiguity in the document.
     Map<RegId, SpotNo> <br>
   are maintained.<br>
   Otherwise, a simpler approach of iterating through the map, using sntrySet exists.
+
+
+A Test class has been added to run all the commands and validate the outputs.
+
